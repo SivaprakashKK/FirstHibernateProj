@@ -1,0 +1,169 @@
+HIBERNATE
+=========
+1) ORM tool - Object-relational mapping
+2) Used in data layer
+3) Implements JPA -  Set of instructions to follow the java standard (Java Persistent API)
+		JPA standard is the standard specified for persistance implementation by a standard body
+boiler plate code
+
+Problems
+=========
+- Mapping the member variables to columns
+- Mapping relationship (handling the dependency between the tables ie., keys)
+- Handling data type 
+- Managing change to object state
+
+
+Add the binaries
+
+Hibernate way
+-------------
+1) JDBC database configuration
+2) Model object creation - Annotation
+3) Service method to create model object and send to Hibernate API
+4) Database design is not needed - Hibernate does this for you
+5) DAO method is  not needed
+
+
+Start Coding
+------------
+I)
+- Create a file, hibernate.cfg.xm - default name
+
+	Dialect - language to connect with a database
+LIst the annotated class in the resource
+II)
+- Create the model	
+	1) make the class entity - making it the class has an entity and has to be saved
+	2) id annotation -  marking the field of object as primary key
+III)
+- Use the Hibernate api to send the data
+	Using the hibernate api in the DAO layer, which get the object from the service layer, the data can be stored in the DB
+	- Create a session factory :will be created only once for an application, session object will be created 
+	- create a session
+	- use session to save object
+	
+	
+Config file
+------------
+hbm2dll - create will create a new schema
+@Entity(name="Table_Name")
+@Column(name="COL_NAME") 
+@Table (name="Table_Name")
+
+Entity and table are same, but will have impact while coding. Will get to know later
+Entity is an object, which contains data which has to be saved in the DB. It has a meaning on its own
+
+Have control over the data type
+
+@Basic - treats the field name as persisted and matched a datatype with db (DEFAULT)
+	- fetch
+	- optional
+@Transient - If we dont want to add a column into db
+@Temporal - Has enumerations to display only date or time (TemporalType.Date)
+@Lob - Large Objects either BLOB(ByteStream) or CLOB (Character)
+
+Retrieval of Model Objects
+===========================
+session.get(class, args ie.,primary key value)
+
+
+Natural and Surrogate keys
+==========================
+Natural keys - has influence over the business logic (eg., mailid or user id)
+Surrogate - just unique but no business use. kind of like s.no
+
+@GeneratedValue - Auto generate a sequence
+	-	strategy - GenerationType Auto, sequence, Identity, Table 
+	
+Hibernate Tutorial 08 - Value Types and Embedding Objects
+=========================================================
+We'll learn the difference between Entity type objects and Value type objects. We'll use the @Embeddable annotations to embed a value type object into our Entity class.
+
+Entity has meaning on its own, VO adds the meaning to an entity
+(User)								(User's address)
+
+@Embeddable - the entity which should be embedded into other entity
+@Embedded - the embedded entity (not mandatory)
+
+either one of this is mandatory
+
+Hibernate Tutorial 09 - AttributeOverrides and Embedded Object Keys
+======================================================================
+In this video, we'll learn how to override configuration inside embedded objects, and we'll also explore object keys.
+
+Overriding the attribute names
+In the last one we used multi level entities.
+
+In order to use different name for same type of objects, we have to override the name
+@AttributeOverride (name="name of the member variable, column = @Column(name="the name needed"))
+All AttributeOverride must be nested inside the @AttributeOverrides({})
+
+If in the case of primary key, we cant use both @Id and @Embeddable in same place. Instead we can use @EmbeddableId, which does the same purpose
+
+Hibernate Tutorial 10 - Saving Collections
+===========================================
+@ElementCollection - to mark the entire collection object
+
+Insert a collection. Create a set of address and add it.
+Annotate it with @ElementCollection - new table will be creaetd with a foreign key
+To change the name use @CollectionTable(name="name")
+
+Hibernate Tutorial 11 - Configuring Collections and Adding Keys
+===============================================================
+More configuration options for collections, including configuring primary keys.
+
+Changing the collection table name using @JointTable(name="NAME)
+Change the foreign key name  using @JointTable(name="NAME, joinColumns=@JoinColumns(name="USER_ID"))
+@CollectionTable and @JoinTable does the same
+
+	Hibernate annotations
+	---------------------
+	To create index for the collection tables, we can use Hibernate annotation, which JPA does not provide
+	@CollectionId(columns ={(@Column="NAME"}),generator="hilo-gen",type=@Type(type="long"))
+	Naming the collectionId and mentioning the type and specifying a generator
+	@GenericGenerator(name="hilo-gen",strategy="hilo)
+	
+Hibernate Tutorial 12 - Proxy Objects and Eager and Lazy Fetch Types
+=====================================================================
+Hibernate manages data fetching and optimizations using proxy objects. In this tutorial, we'll learn what they are and how lazy initialization works.
+
+Lazy initialization fetches only the list of data when it is requested. this is the default config, to limit the resource wastage
+We can load all the data by using eager initialization
+
+This is done by Proxy class - Dynamic sub class of actual Object
+	Instead of handing over the requested object, the hibernate gives us back the proxy object of the original object which has the first level values
+	When the list is requested, before the user's get method, proxy object fetches the data and gives to the original object
+	
+	@ElementCollection(fetch=fetchType.EAGER)
+
+Hibernate Tutorial 13 - One To One Mapping
+===========================================
+If it was an VO, we could embed it, since it is an entity it has to be handled differently
+
+@OneToOne and add the instance of the object to user while saving
+But you have to save the instance of the new entity also, or else it will be taken as Transient by Hibernate
+
+First table will be created, second will be created. Then the second table's primmary key is updated into table1
+Renaming the columns is as before @JoinColumn(name="NEW_NAME")
+
+eg: one user brings one vehicle
+
+Hibernate Tutorial 14 - One To Many Mapping
+===========================================
+eg: Any type of vehicle may multiple users ( no of cars owned)
+eg: One user having multiple set of vehicles
+
+@OneToMany - Creates the two tables and creates a third table showing the reelation between the two
+
+We can change the names using joinColumns and inverseJoinColumns
+@JoinTable(name="Relation_TABLE_NAME", joinColumns=@JoinColumn(name="PRIMARY_KEY_FIRST), inverseJoinColumns=@JoinColumn(name="PRIMARY_KEY_SECOND"))
+
+MANYTOONE
+---------
+	The inverse can be done, in the second entity. Ex: A vehcile can be used by multiple users, user can be found from the type of vehicle
+	So that the second table has the information about the user of the vehicle
+	
+Combining the both we can acheive Bidirectional relationship
+	
+	

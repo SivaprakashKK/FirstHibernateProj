@@ -161,9 +161,67 @@ We can change the names using joinColumns and inverseJoinColumns
 
 MANYTOONE
 ---------
-	The inverse can be done, in the second entity. Ex: A vehcile can be used by multiple users, user can be found from the type of vehicle
+	The inverse can be done, in the second entity. Ex: user can be found from the type of vehicle
+	So that the second table has the information about the user of the vehicle
+	
+	Many vehicle can be used by one users, so mapping the vehichles with respect to users
 	So that the second table has the information about the user of the vehicle
 	
 Combining the both we can acheive Bidirectional relationship
+
+Hibernate Tutorial 15 - mappedBy and Many To Many Mapping
+==========================================================
+Instead of creating a new table for showing the relation between the tables, we can use mappedBy
+@OneToMany(mappedBy="the field to be mapped")
+and in @ManyToOne, rename the column name
+
+@ManyToMany annotaion to be used in both the table collections, it will create two different realtion table, one of that will be redundant
+To avoid that, you could just use the mappedBy in one of the annotations to skip the redundant table
+Then use same, JoinTable, joinColumns and inverseJoinColumns to change the names
+
+Hibernate Tutorial 16 - CascadeTypes and Other Things
+==========================================================
+@NotFound annotation helps in handling the not found exception when getting the data from session
+
+	Hibernate collection
+	--------------------
+	Bag semantic - list/arraylist
+	Bag semantic with id - list/arraylist
+	List semantic - list/arraylist - can be sorted
+	Set semantic - set
+	Map semantic - map
 	
-	
+Already faced an issue, if there is an entity is there, we need to manually save the related entity also.
+To avoid that, tell hibernate, that add all the related entities, we can use the cascade optioon in OneToMany
+ @OneToMany(cascade=CascadeType.PERSIST) and change the method from save to persist the session
+ session.persist()
+ 
+ Cascade all is another enum to apply all the prop
+ 
+ 
+Hibernate Tutorial 17 - Implementing Inheritance
+==========================================================
+
+Single tabel Strategy
+
+When a class(entity) is extended, it will create a single table strategy with Dtype in a single table, stoing the discriminator type of the extended table and both the values
+vehicle contains, id, name, and dtype with two/four wheel info in two diff cols
+
+Hibernate Tutorial 18 - Implementing Inheritance - Single Table Strategy
+==========================================================================
+
+@Inheritance under the enityt is also not mandatory for STS
+@Inheritance(strategy=InheritanceType.SINGLE) not mandatory this is default
+Now changing the DTYPE name @DiscriminatorColumn(name="VEHICLE_TYPE", discriminatorType=DiscriminatorType.String)
+Also the DTYPE value can be changed using the @DiscriminatorValue("Value") is the column value
+
+Hibernate Tutorial 19 - Implementing Inheritance With Table Per Class Strategy
+==========================================================================
+
+What if we need separate table for all the vehicle types instead of STS
+
+We can change the Inheritance strategy to TABLE_PER_CLASS
+
+faced an issue, keepting the gen type of the id should be set to table instead of auto
+
+Two tables created with relation to the parent, so no blank, with parent realtion

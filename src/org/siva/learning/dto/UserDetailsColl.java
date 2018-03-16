@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -22,6 +23,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -45,17 +47,29 @@ public class UserDetailsColl {
 
 */	
 	
+/*	
 //	One to one realtationshipp explanation
 	@OneToOne
 	@JoinColumn(name="VEHICLE_ID")
 	private Vehicle vehicle;
+*/
 	
 	
+
 //	One to many relationship
-	@OneToMany
+	@OneToMany(cascade=CascadeType.PERSIST)
 	@JoinTable(name="USER_VEHICLE", joinColumns=@JoinColumn(name="USER_ID"), inverseJoinColumns=@JoinColumn(name="VEHICLE_ID"))
 	private Collection<Vehicle> vehicles = new ArrayList<Vehicle>();	 
 	
+
+	
+/*	
+//	Many to many relation
+	@ManyToMany
+	@JoinTable(name="VEHICLE_USER_COLL", joinColumns =@JoinColumn(name="USER_ID"), inverseJoinColumns=@JoinColumn(name="VEHICLE_ID"))
+	private Collection<Vehicle> vehicles = new ArrayList<Vehicle>();
+	
+*/
 	public int getUserId() {
 		return userId;
 	}
@@ -80,6 +94,7 @@ public class UserDetailsColl {
 //		this.listOfAddresses = listOfAddresses;
 //	}
 
+/*	
 	public Vehicle getVehicle() {
 		return vehicle;
 	}
@@ -87,7 +102,9 @@ public class UserDetailsColl {
 	public void setVehicle(Vehicle vehicle) {
 		this.vehicle = vehicle;
 	}
-
+	
+*/	
+	
 	public Collection<Vehicle> getVehicles() {
 		return vehicles;
 	}
@@ -96,5 +113,5 @@ public class UserDetailsColl {
 		this.vehicles = vehicles;
 	}
 
-	 
+ 
 }

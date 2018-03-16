@@ -54,8 +54,11 @@
 
 		<!-- Names the annotated entity class -->
        <!--  <mapping class="org.siva.learning.dto.UserDetails"/> -->
-        <mapping class="org.siva.learning.dto.UserDetailsColl"/>
-        <mapping class="org.siva.learning.dto.Vehicle"/>
+      <!--   <mapping class="org.siva.learning.dto.UserDetailsColl"/> -->
+      <!--   <mapping class="org.siva.learning.dto.Vehicle"/> -->
+        <mapping class="org.siva.learning.dto.VehicleInh"/>
+        <mapping class="org.siva.learning.dto.TwoWheeler"/>
+        <mapping class="org.siva.learning.dto.FourWheeler"/>
         
         <!-- <mapping resource="org/hibernate/tutorial/hbm/Event.hbm.xml"/> -->
 

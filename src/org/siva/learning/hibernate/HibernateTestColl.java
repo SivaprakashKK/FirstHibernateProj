@@ -32,24 +32,33 @@ public class HibernateTestColl {
 		user.setUserName("First Name");
 //		user.getListOfAddresses().add(addr);
 //		user.getListOfAddresses().add(addr2);
-		
+	
+/*		
 		//One to one
 		user.setVehicle(vehicle);
+		
+*/
 		
 		//One to many
 		user.getVehicles().add(vehicle);
 		user.getVehicles().add(vehicle2);
 
+/*		
 		//Many to one - Adding a user to a vehicle
 		vehicle.setUser(user);
 		vehicle2.setUser(user);
+*/		
+		//Many to many
+		vehicle.getUserList().add(user);
+		vehicle2.getUserList().add(user);
 		
 		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		session.save(user);
-		session.save(vehicle);
-		session.save(vehicle2);
+		session.persist(user);
+	//	session.save(user);
+//		session.save(vehicle);
+//		session.save(vehicle2);
 		session.getTransaction().commit();
 		
 		session.close();

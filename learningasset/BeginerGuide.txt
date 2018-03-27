@@ -209,6 +209,7 @@ vehicle contains, id, name, and dtype with two/four wheel info in two diff cols
 
 Hibernate Tutorial 18 - Implementing Inheritance - Single Table Strategy
 ==========================================================================
+Everything to one table
 
 @Inheritance under the enityt is also not mandatory for STS
 @Inheritance(strategy=InheritanceType.SINGLE) not mandatory this is default
@@ -217,6 +218,7 @@ Also the DTYPE value can be changed using the @DiscriminatorValue("Value") is th
 
 Hibernate Tutorial 19 - Implementing Inheritance With Table Per Class Strategy
 ==========================================================================
+Parent data is duplicated to child
 
 What if we need separate table for all the vehicle types instead of STS
 
@@ -225,3 +227,149 @@ We can change the Inheritance strategy to TABLE_PER_CLASS
 faced an issue, keepting the gen type of the id should be set to table instead of auto
 
 Two tables created with relation to the parent, so no blank, with parent realtion
+
+Hibernate Tutorial 20 - Implementing Inheritance With Joined Strategy
+======================================================================
+Parent have core property inherited by child. Child has its own content
+
+The problem with the above method is, it'll create extra data of the parent table in child. To avoid this we can use joined strategy
+This will add all the parent information from the child to parent and only the child information to child table
+
+Data can be extracted using join the tables
+
+Hibernate Tutorial 21 - CRUD Operations
+=======================================
+Create - session.save(obj)
+Update - session.update(obj)
+Delete - session.delete(obj)
+Read -  seeeion.get(class, pk)
+
+Hibernate Tutorial 22 - Transient, Persistent and Detached Objects
+==================================================================
+Before saving the session, all object are transient to Hibernate
+Before closing the sessin, if we do some change to the object, the final modification to the object willl be taken into consideration
+eventhough if we dont use session.update()
+
+Before save, the object will be in Transient state
+any change to Persistent object reflects in DB - After save
+once session is closed it'll become Detached object
+
+Hibernate Tutorial 24 - Persisting Detached Objects
+====================================================
+After closing the session, the detached object can be persisted using create a new session and save the same object
+By this way, after the first session, in the second session the hibernate will do the update, whether or not if there is any change in the object
+To avoid this, we have a hibernate annotation @org.hibernate.annotaion.Entity(selectBeforeUpdate=true) which will do a select before the update
+
+Hibernate Tutorial 25 - Introducing HQL and the Query Object
+============================================================
+use session.createQuery() to cerate a query
+"from ClassName where variableName = value" this will give a Query Object from Hibernate package
+Then list object is created from that query.list()
+
+Hibernate Tutorial 26 - Select and Pagination in HQL
+====================================================
+query.setFirstResult(val)
+query.setMaxResult(val)
+Provides offset - Start point +1 with number of results
+
+We can also write the query in createQuery "Select username from table"
+
+Hibernate Tutorial 27 - Understanding Parameter Binding and SQL Injection
+=========================================================================
+Parameter Substitution
+
+We can have where condition from paramaeter adnd can also build sql query 
+Parameter binding can be used by having question marks and using
+query.setInteger(0,int value);
+another type is instead of ?, we can name it. where name = :username
+query.setString(username, "Name")
+
+Hibernate Tutorial 28 - Named Queries
+======================================
+We'll learn about named queries and how to write and access named queries. We'll also write and execute a NamedNativeQuery.
+
+Consolidating all queries in one place
+
+we can name the query in one place under the entity
+@NamedQuery(name="table.name", query="hql query")
+we can call this by Query query = session.getNamedQuery("table.name") and setting the parameter value
+@NamedNativeQuery is one in wwhic we can write the native sql with full syntax and in ther resultClass we can set the result class name
+@NamedQuery(name="table.name", query="sql query", resultClass=className.class)
+
+Hibernate Tutorial 29 - Introduction to Criteria API
+====================================================
+third mmethod of data manipulation is Criteria API,
+
+Just create a criteria for a class
+Criteria criteria = session.createCriteria(classname);
+citeria.add(Restrictions.eq("variable","value"));
+
+Hibernate Tutorial 30 - Understanding Restrictions
+==================================================
+Similar to "and" in SQL
+
+We can append to the restrictions without adding creating new criterias for the same class.
+citeria.add(Restrictions.eq("variable","value"))
+		.add(Restrictions.gt("variable","value"));
+		
+lt, le, gt, ge, ilike, between		
+
+If "OR" is needed
+
+You have to add "or" restrictions
+criteria.add(Restrictions.or(Restrictions.between("userId", 1, 3),Restrictions.between("userId", 7, 10)));
+
+Hibernate Tutorial 31 - Projections and Query By Example
+========================================================
+Grouping functions - like maximum or minimum
+
+in the criteria itself, instead of whole table, we can limit and manipulate it
+Projections.property("col")
+Criteria criteria = session.createCriteria("class")
+	.setProjection(Projections.count("var")); -- has the count value
+	similarly distinct, min, max, avg, sum more functionalities are there
+
+Query by example-  if you are specific about finding a specific row. we can create an example object and give it to criteria
+it will find that for us. NOTE: It'll skip null values and avoid the primary key columns
+
+exampUser is a user object
+
+Example ex = Example.create(exampUser);
+pass this ex to criteria by session.createCriteria("class").add(ex);
+
+We can exclude the properties by adding excludeProperty("variableName") method
+Also enableLike() to use like
+
+Hibernate Tutorial 32 - Cacheing in Hibernate
+=============================================
+First level cache - session
+Second level cache - across session in an application
+					-	across application
+					- across clusters
+
+If the object is not in the second level cache only hibernate talks to db
+
+Hibernate Tutorial 33 - Configuring Second Level Cache					
+========================================================
+<property name="cache.use.second_level_cache">true</property>
+<property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+
+Then download the jars for the respective providers and add in class path
+Until u mention the entity to be cached, there will be no caching
+
+@Cacheable
+Caching strategy = @Cache(usage=CacheConcurrencyStrategy.ENUM) - org.hibernate
+Read only - oLY reading
+read write - also write cache
+transacitonal, 
+nonSTRICT_READ_WRITE - not so strict
+
+Hibernate Tutorial 34 - Using Query Cache
+=========================================
+1) Session Cache
+2) Second level 
+3) Query cache
+
+Enable use.query.cache in properties
+and have to set the query cacheable during the execution
+query.setCacheable(true)

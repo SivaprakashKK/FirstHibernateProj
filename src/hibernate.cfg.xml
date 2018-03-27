@@ -43,22 +43,28 @@
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 
         <!-- Disable the second-level cache  -->
-        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+        <!-- <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property> -->
+        <!-- Enable the second-level cache and its provider -->
+        <property name="cache.use_second_level_cache">true</property>
+        <!-- Enable the query cache -->
+        <property name="cache.use_query_cache">true</property>
+        <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
 
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">true</property>
 
         <!-- Drop and re-create the database schema on startup -->
         <!-- Create - Recreate; Update - Updates the schema -->
-        <property name="hbm2ddl.auto">create</property>
+        <property name="hbm2ddl.auto">update</property>
 
 		<!-- Names the annotated entity class -->
        <!--  <mapping class="org.siva.learning.dto.UserDetails"/> -->
       <!--   <mapping class="org.siva.learning.dto.UserDetailsColl"/> -->
       <!--   <mapping class="org.siva.learning.dto.Vehicle"/> -->
-        <mapping class="org.siva.learning.dto.VehicleInh"/>
+   <!--      <mapping class="org.siva.learning.dto.VehicleInh"/>
         <mapping class="org.siva.learning.dto.TwoWheeler"/>
-        <mapping class="org.siva.learning.dto.FourWheeler"/>
+        <mapping class="org.siva.learning.dto.FourWheeler"/> -->
+        <mapping class="org.siva.learning.dto.UserDetailsCRUD"/>
         
         <!-- <mapping resource="org/hibernate/tutorial/hbm/Event.hbm.xml"/> -->
 

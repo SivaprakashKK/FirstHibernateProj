@@ -2,6 +2,10 @@ show databases;
 use hibernatedb;
 show tables;
 
+
+select * from  USER_CRUD;
+---------------------------------------
+
 select * from Vehicle;
 select * from TwoWheeler;
 select * from FourWheeler;
